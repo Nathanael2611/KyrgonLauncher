@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="commons-io-2.6">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Lib/commons-io-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Lib/gson-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Lib/openauth-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Lib/openlauncherlib-3.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Lib/s-update-3.1.0-BETA.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>

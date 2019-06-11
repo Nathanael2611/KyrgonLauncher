@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="XXXKGLAUNCHERDEVXXX:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/XXXKGLAUNCHERDEVXXX_jar</output-path>
+    <root id="archive" name="XXXKGLAUNCHERDEVXXX.jar">
+      <element id="module-output" name="XXXKGLAUNCHERDEVXXX" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/commons-io-2.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/gson-2.6.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/openauth-1.0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/openlauncherlib-3.0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/s-update-3.1.0-BETA.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$" />
+    </root>
+  </artifact>
+</component>
