@@ -1,8 +1,9 @@
 package fr.nathanael2611.kyrgon.launcher;
 
-import fr.nathanael2611.json.JSONObject;
+import org.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,14 +16,20 @@ import java.util.Base64;
  */
 public class UserInfos {
 
+    public final File userInfos;
+
+    public UserInfos(File userInfos){
+        this.userInfos = userInfos;
+    }
+
     /**
      * Used for setup the user info-file.
      */
-    public static void setupUserInfoFile(){
-        if(!Main.USER_INFOS.exists()){
+    public void setupUserInfoFile(){
+        if(!userInfos.exists()){
             try {
-                Main.USER_INFOS.createNewFile();
-                FileWriter writer = new FileWriter(Main.USER_INFOS);
+                userInfos.createNewFile();
+                FileWriter writer = new FileWriter(userInfos);
                 writer.write("{}");
                 writer.close();
             } catch (IOException e) {
@@ -34,50 +41,75 @@ public class UserInfos {
     /**
      * Get the JSONObject stored in the user info-file.
      */
-    public static JSONObject getUserInfosObject(){
+    public JSONObject getUserInfosObject(){
         setupUserInfoFile();
-        JSONObject object = new JSONObject(Helpers.readFileToString(Main.USER_INFOS));
+        JSONObject object = null;
+        try {
+            object = new JSONObject(Helpers.readFileToString(userInfos));
+        } catch (IOException e) {
+            userInfos.delete();
+            setupUserInfoFile();
+            e.printStackTrace();
+            return getUserInfosObject();
+        }
         return object;
     }
 
     /**
      * Get the username stored in the user-file.
      */
-    public static String getUsername(){
+    public String getUsername(){
         JSONObject object = getUserInfosObject();
         String username = null;
-        if(object.getString("username").equalsIgnoreCase("notfound"))return "";
+        if(object.isNull("username"))return "";
         try {
             username = IOUtils.toString(Base64.getDecoder().decode(object.getString("username")), String.valueOf(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
             username = "";
         }
-        if(username.equalsIgnoreCase("notfound"))username = "";
         return username;
     }
 
     /**
      * Get the password from the user-file.
      */
-    public static String getPassword(){
+    public String getPassword(){
         JSONObject object = getUserInfosObject();
         String password = null;
-        if(object.getString("password").equalsIgnoreCase("notfound"))return "";
+        if(object.isNull("password"))return "";
         try {
             password = IOUtils.toString(Base64.getDecoder().decode(object.getString("password")), String.valueOf(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
             password = "";
         }
-        if(password.equalsIgnoreCase("notfound"))password = "";
         return password;
+    }
+
+    public boolean useOpenLauncherLib() {
+        JSONObject object = getUserInfosObject();
+        boolean useOpenLauncherlib = true;
+        if(object.isNull("useOpenLauncherLib"))return useOpenLauncherlib;
+        return object.getBoolean("useOpenLauncherLib");
+    }
+
+    public void setUseOpenLauncherLib(boolean use){
+        JSONObject object = getUserInfosObject();
+        object.put("useOpenLauncherLib", use);
+        try {
+            FileWriter writer = new FileWriter(userInfos);
+            writer.write(object.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Used for set user infos in the info-file.
      */
-    public static void setInfos(String username, String password){
+    public void setInfos(String username, String password){
         JSONObject object = getUserInfosObject();
         try {
             object.put("username", IOUtils.toString(Base64.getEncoder().encode(username.getBytes()), String.valueOf(StandardCharsets.UTF_8)));
@@ -86,7 +118,7 @@ public class UserInfos {
             e.printStackTrace();
         }
         try {
-            FileWriter writer = new FileWriter(Main.USER_INFOS);
+            FileWriter writer = new FileWriter(userInfos);
             writer.write(object.toString());
             writer.close();
         } catch (IOException e) {
@@ -94,16 +126,17 @@ public class UserInfos {
         }
     }
 
-    public static double getRam(){
+    public double getRam(){
         JSONObject object = getUserInfosObject();
         if(!(object.getDouble("ram")>=1.5))return 1.5;
         return object.getDouble("ram");
     }
-    public static void setRam(double ram){
+
+    public void setRam(double ram){
         JSONObject object = getUserInfosObject();
         object.put("ram", ram);
         try {
-            FileWriter writer = new FileWriter(Main.USER_INFOS);
+            FileWriter writer = new FileWriter(userInfos);
             writer.write(object.toString());
             writer.close();
         } catch (IOException e) {
@@ -114,7 +147,7 @@ public class UserInfos {
     /**
      * Used for disconnect the player-account.
      */
-    public static void disconnect(){
+    public void disconnect(){
         setInfos("", "");
     }
 
